@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PixelMind Studio — AI Creative Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   ADVANCED PIXELMIND STUDIO — V2
+   Aesthetic: Luxury dark studio + neon accents
+   ═══════════════════════════════════════════ */
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --ink: #050A07;
+  --ink2: #0A1410;
+  --surface: #0F1E18;
+  --surface2: #162620;
+  --surface3: #1C3028;
+  --rim: rgba(255,255,255,0.06);
+  --rim2: rgba(255,255,255,0.12);
+
+  --jade: #00E87A;
+  --jade-dim: #00B85F;
+  --jade-ghost: rgba(0,232,122,0.08);
+  --coral: #FF5C38;
+  --coral-dim: #CC4A2D;
+  --coral-ghost: rgba(255,92,56,0.08);
+  --gold: #F5C842;
+  --sky: #38C4FF;
+
+  --txt: #E8F5EF;
+  --txt2: #7FA896;
+  --txt3: #4A6B5E;
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+
+  --glow-jade: 0 0 60px rgba(0,232,122,0.15), 0 0 120px rgba(0,232,122,0.06);
+  --glow-coral: 0 0 60px rgba(255,92,56,0.15);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  background: var(--ink);
+  color: var(--txt);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor {
+  position: fixed; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--jade); pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%); transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  mix-blend-mode: screen;
+}
+#cursor-ring {
+  position: fixed; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(0,232,122,0.4); pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%); transition: transform 0.15s ease, width 0.3s, height 0.3s, border-color 0.3s;
+}
+body:has(a:hover) #cursor, body:has(button:hover) #cursor { width:20px; height:20px; background: var(--coral); }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width:60px; height:60px; border-color: rgba(255,92,56,0.4); }
+
+/* ── CANVAS BACKGROUND ── */
+#bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ── GRAIN OVERLAY ── */
+.grain {
+  position: fixed; inset: -50%; width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.03; pointer-events: none; z-index: 1; animation: grain-shift 8s steps(2) infinite;
+}
+@keyframes grain-shift { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,-1%)} 50%{transform:translate(1%,2%)} 75%{transform:translate(-1%,1%)} 100%{transform:translate(0,0)} }
+
+/* ── LAYOUT ── */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 2.5rem; position: relative; z-index: 2; }
+
+/* ══════════════════════════════
+   NAV
+   ══════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 1.25rem 2.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(5,10,7,0.7); backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 0.5px solid var(--rim);
+  transition: all 0.4s;
+}
+nav.scrolled { background: rgba(5,10,7,0.95); }
+
+.nav-logo {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.5rem; font-weight: 700; letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--jade) 0%, var(--sky) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+.nav-logo sup { font-size: 0.5rem; vertical-align: super; opacity: 0.6; -webkit-text-fill-color: var(--jade); }
+
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  color: var(--txt2); text-decoration: none; font-size: 0.85rem; font-weight: 400;
+  letter-spacing: 0.02em; transition: color 0.2s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: var(--jade); transform: scaleX(0); transition: transform 0.3s;
+}
+.nav-links a:hover { color: var(--txt); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.nav-actions { display: flex; gap: 1rem; align-items: center; }
+.nav-login { color: var(--txt2); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+.nav-login:hover { color: var(--txt); }
+.btn { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; border: none; cursor: pointer; font-family: 'Cabinet Grotesk', sans-serif; font-weight: 500; transition: all 0.25s; }
+.btn-jade {
+  background: var(--jade); color: var(--ink); padding: 0.65rem 1.5rem; border-radius: 100px;
+  font-size: 0.875rem; font-weight: 700; letter-spacing: -0.01em;
+}
+.btn-jade:hover { background: #00ff87; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(0,232,122,0.4); }
+.btn-coral {
+  background: var(--coral); color: #fff; padding: 0.65rem 1.5rem; border-radius: 100px;
+  font-size: 0.875rem; font-weight: 700;
+}
+.btn-coral:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,92,56,0.4); }
+.btn-outline {
+  background: transparent; color: var(--txt); padding: 0.65rem 1.5rem; border-radius: 100px;
+  font-size: 0.875rem; border: 0.5px solid var(--rim2);
+}
+.btn-outline:hover { border-color: var(--jade); color: var(--jade); }
+.btn-ghost-play { color: var(--txt2); font-size: 0.875rem; gap: 0.75rem; }
+.btn-ghost-play .play-icon {
+  width: 40px; height: 40px; border-radius: 50%; border: 0.5px solid var(--rim2);
+  display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
+  transition: all 0.3s;
+}
+.btn-ghost-play:hover { color: var(--txt); }
+.btn-ghost-play:hover .play-icon { border-color: var(--jade); box-shadow: 0 0 20px rgba(0,232,122,0.3); }
+
+/* ══════════════════════════════
+   HERO
+   ══════════════════════════════ */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 10rem 2.5rem 6rem; position: relative; overflow: hidden;
+}
+.hero-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; width: 100%; }
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: var(--jade-ghost); border: 0.5px solid rgba(0,232,122,0.2);
+  border-radius: 100px; padding: 0.4rem 1rem 0.4rem 0.6rem;
+  font-size: 0.75rem; color: var(--jade); letter-spacing: 0.04em; font-weight: 500;
+  margin-bottom: 1.75rem; width: fit-content;
+}
+.eyebrow-dot {
+  width: 18px; height: 18px; border-radius: 50%; background: rgba(0,232,122,0.15);
+  display: flex; align-items: center; justify-content: center;
+}
+.eyebrow-dot::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--jade); animation: pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
+
+.hero-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(3rem, 5.5vw, 5.5rem); font-weight: 700;
+  line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 1.5rem;
+}
+.title-line { display: block; overflow: hidden; }
+.title-line span { display: block; animation: slide-up 0.9s cubic-bezier(0.16,1,0.3,1) both; }
+.title-line:nth-child(2) span { animation-delay: 0.1s; }
+.title-line:nth-child(3) span { animation-delay: 0.2s; }
+@keyframes slide-up { from{transform:translateY(110%);opacity:0} to{transform:translateY(0);opacity:1} }
+
+.title-gradient {
+  background: linear-gradient(135deg, var(--jade) 0%, var(--sky) 50%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-size: 200% 100%; animation: shimmer 4s ease-in-out infinite alternate;
+}
+@keyframes shimmer { from{background-position:0% 50%} to{background-position:100% 50%} }
+
+.hero-sub {
+  font-size: 1.05rem; color: var(--txt2); line-height: 1.7; font-weight: 300;
+  max-width: 440px; margin-bottom: 2.5rem;
+  animation: fade-up 1s 0.4s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes fade-up { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 3rem; animation: fade-up 1s 0.5s both; }
+
+.hero-trust { display: flex; gap: 2.5rem; animation: fade-up 1s 0.6s both; }
+.trust-item { position: relative; }
+.trust-num {
+  font-family: 'Clash Display', sans-serif; font-size: 1.8rem; font-weight: 700;
+  letter-spacing: -0.04em; line-height: 1;
+  background: linear-gradient(135deg, var(--txt) 0%, var(--txt2) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.trust-num sup { font-size: 0.8rem; vertical-align: super; }
+.trust-label { font-size: 0.75rem; color: var(--txt3); margin-top: 0.2rem; font-weight: 400; }
+.trust-divider { width: 1px; background: var(--rim2); }
+
+/* ── HERO VISUAL ── */
+.hero-visual { position: relative; animation: fade-up 1s 0.3s both; }
+
+.studio-card {
+  background: linear-gradient(145deg, var(--surface) 0%, var(--ink2) 100%);
+  border: 0.5px solid var(--rim2); border-radius: var(--r-xl);
+  overflow: hidden; box-shadow: 0 60px 120px rgba(0,0,0,0.6), var(--glow-jade);
+  position: relative;
+}
+.studio-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 0%, rgba(0,232,122,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.studio-topbar {
+  padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem;
+  border-bottom: 0.5px solid var(--rim); background: var(--surface2);
+}
+.studio-dots { display: flex; gap: 6px; }
+.studio-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.studio-dots span:nth-child(1) { background: #FF5F57; }
+.studio-dots span:nth-child(2) { background: #FEBC2E; }
+.studio-dots span:nth-child(3) { background: #28C840; }
+.studio-mode-tabs { display: flex; gap: 2px; background: var(--ink); border-radius: 8px; padding: 2px; margin-left: auto; }
+.mode-tab { font-size: 0.72rem; padding: 0.3rem 0.8rem; border-radius: 6px; color: var(--txt3); cursor: pointer; transition: all 0.2s; }
+.mode-tab.active { background: var(--surface3); color: var(--jade); }
+.ai-indicator { display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: var(--jade); }
+.ai-indicator::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--jade); animation: pulse-dot 2s infinite; }
+
+.studio-body { display: grid; grid-template-columns: 56px 1fr 160px; height: 360px; }
+
+/* Icon sidebar */
+.studio-sidebar {
+  border-right: 0.5px solid var(--rim); padding: 0.75rem 0;
+  display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--surface2);
+}
+.sidebar-icon {
+  width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; color: var(--txt3); cursor: pointer; transition: all 0.2s; position: relative;
+}
+.sidebar-icon:hover, .sidebar-icon.active { background: var(--jade-ghost); color: var(--jade); }
+.sidebar-icon.active::before { content: ''; position: absolute; left: -1px; top: 20%; bottom: 20%; width: 2px; background: var(--jade); border-radius: 0 2px 2px 0; }
+.sidebar-sep { width: 24px; height: 0.5px; background: var(--rim); margin: 4px 0; }
+
+/* Canvas */
+.studio-canvas {
+  position: relative; background: repeating-linear-gradient(
+    0deg, transparent, transparent 24px, var(--rim) 24px, var(--rim) 25px
+  ), repeating-linear-gradient(90deg, transparent, transparent 24px, var(--rim) 24px, var(--rim) 25px);
+  background-size: 25px 25px; display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.canvas-subject {
+  width: 180px; height: 240px; border-radius: 16px; position: relative;
+  background: linear-gradient(160deg, #1a4a35 0%, #0d2a1e 40%, #2a1a0d 100%);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: float-card 4s ease-in-out infinite;
+}
+@keyframes float-card { 0%,100%{transform:translateY(0) rotate(-1.5deg)} 50%{transform:translateY(-10px) rotate(1deg)} }
+.canvas-subject-inner {
+  position: absolute; inset: 0; border-radius: 16px; overflow: hidden;
+  background: radial-gradient(ellipse at 30% 25%, rgba(0,232,122,0.2) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 75%, rgba(255,92,56,0.15) 0%, transparent 50%);
+}
+.canvas-subject-face {
+  position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+  width: 70px; height: 70px; border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 35%, #c8a882 0%, #8b6347 60%, #5a3d26 100%);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.canvas-subject-body {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 120%; height: 50%; border-radius: 60px 60px 0 0;
+  background: linear-gradient(180deg, #1D3040 0%, #0d1a24 100%);
+}
+.canvas-selection-box {
+  position: absolute; inset: 8px; border: 1.5px dashed rgba(0,232,122,0.5);
+  border-radius: 12px; pointer-events: none;
+}
+.canvas-selection-box::before, .canvas-selection-box::after {
+  content: ''; position: absolute; width: 8px; height: 8px;
+  border-radius: 2px; background: var(--jade);
+}
+.canvas-selection-box::before { top: -4px; left: -4px; }
+.canvas-selection-box::after { bottom: -4px; right: -4px; }
+
+/* AI floating pills */
+.ai-chip {
+  position: absolute; background: var(--ink2); border: 0.5px solid var(--rim2);
+  border-radius: 100px; padding: 0.35rem 0.75rem; font-size: 0.65rem; font-weight: 500;
+  display: flex; align-items: center; gap: 0.4rem; backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.ai-chip.jade { border-color: rgba(0,232,122,0.3); color: var(--jade); animation: chip-float1 3s ease-in-out infinite; }
+.ai-chip.coral { border-color: rgba(255,92,56,0.3); color: var(--coral); animation: chip-float2 3.5s ease-in-out infinite; }
+.ai-chip.sky { border-color: rgba(56,196,255,0.3); color: var(--sky); animation: chip-float3 4s ease-in-out infinite; }
+.ai-chip.pos1 { top: 12px; right: 12px; }
+.ai-chip.pos2 { bottom: 20px; left: 8px; }
+.ai-chip.pos3 { top: 50%; right: 8px; transform: translateY(-50%); }
+@keyframes chip-float1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+@keyframes chip-float2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+@keyframes chip-float3 { 0%,100%{transform:translateY(-50%) translateX(0)} 50%{transform:translateY(-50%) translateX(-3px)} }
+
+/* Progress bar on canvas */
+.canvas-processing {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 0.75rem;
+  background: linear-gradient(transparent, rgba(5,10,7,0.9));
+}
+.proc-bar { height: 2px; background: var(--rim); border-radius: 2px; margin-bottom: 0.4rem; }
+.proc-fill { height: 100%; width: 68%; background: linear-gradient(90deg, var(--jade), var(--sky)); border-radius: 2px; animation: proc-anim 3s ease-in-out infinite; }
+@keyframes proc-anim { 0%{width:10%} 70%{width:90%} 100%{width:68%} }
+.proc-label { font-size: 0.62rem; color: var(--txt3); display: flex; justify-content: space-between; }
+
+/* Right panel */
+.studio-panel {
+  border-left: 0.5px solid var(--rim); padding: 1rem; overflow-y: auto;
+  background: var(--surface2); display: flex; flex-direction: column; gap: 1rem;
+}
+.panel-section { }
+.panel-heading { font-size: 0.6rem; color: var(--txt3); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.6rem; font-weight: 600; }
+.slider-group { display: flex; flex-direction: column; gap: 0.6rem; }
+.slider-item { }
+.slider-label { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--txt2); margin-bottom: 0.3rem; }
+.slider-val { color: var(--jade); font-weight: 600; }
+.slider-track { height: 3px; background: var(--rim); border-radius: 2px; position: relative; cursor: pointer; }
+.slider-fill-j { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--jade-dim), var(--jade)); }
+.slider-thumb { width: 10px; height: 10px; border-radius: 50%; background: #fff; position: absolute; top: -3.5px; transform: translateX(-50%); box-shadow: 0 0 8px rgba(0,232,122,0.6); }
+.ai-btn {
+  width: 100%; padding: 0.6rem; border-radius: 8px; border: 0.5px solid rgba(0,232,122,0.3);
+  background: var(--jade-ghost); color: var(--jade); font-size: 0.72rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+  font-family: 'Cabinet Grotesk', sans-serif;
+}
+.ai-btn:hover { background: rgba(0,232,122,0.15); box-shadow: 0 0 20px rgba(0,232,122,0.2); }
+.history-items { display: flex; flex-direction: column; gap: 0.4rem; }
+.history-item { font-size: 0.65rem; color: var(--txt3); display: flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0; border-bottom: 0.5px solid var(--rim); }
+.h-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--jade); flex-shrink: 0; }
+
+/* ══════════════════════════════
+   TICKER STRIP
+   ══════════════════════════════ */
+.ticker-wrap {
+  overflow: hidden; border-top: 0.5px solid var(--rim); border-bottom: 0.5px solid var(--rim);
+  padding: 0.9rem 0; background: var(--surface); position: relative; z-index: 2;
+}
+.ticker-wrap::before, .ticker-wrap::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 3; pointer-events: none;
+}
+.ticker-wrap::before { left: 0; background: linear-gradient(90deg, var(--surface), transparent); }
+.ticker-wrap::after { right: 0; background: linear-gradient(-90deg, var(--surface), transparent); }
+.ticker-track { display: flex; gap: 3rem; animation: ticker 25s linear infinite; width: max-content; }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.ticker-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.78rem; color: var(--txt3); white-space: nowrap; font-weight: 400; }
+.ticker-item em { color: var(--jade); font-style: normal; }
+.ticker-sep { color: var(--txt3); opacity: 0.3; }
+
+/* ══════════════════════════════
+   SECTION COMMONS
+   ══════════════════════════════ */
+section { position: relative; z-index: 2; }
+.section-label { font-size: 0.72rem; color: var(--jade); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+.section-label::before { content: '◆'; font-size: 0.5rem; }
+.section-title { font-family: 'Clash Display', sans-serif; font-size: clamp(2rem,4vw,3.5rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 1rem; }
+.section-sub { color: var(--txt2); font-size: 1rem; line-height: 1.7; font-weight: 300; max-width: 520px; }
+
+/* ══════════════════════════════
+   FEATURE BENTO GRID
+   ══════════════════════════════ */
+.bento { padding: 6rem 2.5rem; }
+.bento-header { text-align: center; margin-bottom: 4rem; }
+.bento-header .section-label { justify-content: center; }
+.bento-header .section-sub { margin: 0 auto; }
+
+.bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1rem; }
+
+.bento-card {
+  background: var(--surface); border: 0.5px solid var(--rim); border-radius: var(--r-lg);
+  padding: 2rem; position: relative; overflow: hidden; transition: all 0.3s;
+}
+.bento-card:hover { border-color: var(--rim2); transform: translateY(-3px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.bento-card::after {
+  content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0,232,122,0.06) 0%, transparent 70%);
+}
+.bento-card:hover::after { opacity: 1; }
+
+.bc-1 { grid-column: span 5; grid-row: span 2; }
+.bc-2 { grid-column: span 4; }
+.bc-3 { grid-column: span 3; }
+.bc-4 { grid-column: span 7; }
+.bc-5 { grid-column: span 3; grid-row: span 2; }
+.bc-6 { grid-column: span 4; }
+.bc-7 { grid-column: span 5; }
+
+.bento-icon { font-size: 2rem; margin-bottom: 1.5rem; display: block; }
+.bento-card h3 { font-family: 'Clash Display', sans-serif; font-size: 1.2rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+.bento-card p { font-size: 0.85rem; color: var(--txt2); line-height: 1.65; font-weight: 300; }
+
+.bento-visual { margin-top: 1.5rem; }
+/* Image adjustments mini preview */
+.adj-bars { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+.adj-bar { display: flex; align-items: center; gap: 0.75rem; }
+.adj-label { font-size: 0.65rem; color: var(--txt3); width: 70px; flex-shrink: 0; }
+.adj-track { flex: 1; height: 4px; background: var(--rim); border-radius: 2px; }
+.adj-fill { height: 100%; border-radius: 2px; }
+.adj-val { font-size: 0.65rem; color: var(--txt2); width: 30px; text-align: right; font-weight: 600; }
+
+/* Waveform */
+.waveform { display: flex; align-items: center; gap: 2px; height: 48px; margin-top: 1rem; }
+.wave-bar { flex: 1; border-radius: 2px; background: var(--jade); opacity: 0.6; animation: wave-dance var(--d, 1s) ease-in-out infinite alternate; }
+@keyframes wave-dance { from{transform:scaleY(0.2)} to{transform:scaleY(1)} }
+
+/* Instruction flow viz */
+.instr-flow { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.instr-step { display: flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; }
+.instr-step-num { width: 18px; height: 18px; border-radius: 50%; background: var(--jade-ghost); border: 0.5px solid rgba(0,232,122,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--jade); font-weight: 700; flex-shrink: 0; }
+.instr-step-txt { color: var(--txt2); }
+.instr-step-txt strong { color: var(--txt); }
+
+/* Security list */
+.sec-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.sec-list-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.78rem; color: var(--txt2); }
+.sec-check { width: 16px; height: 16px; border-radius: 50%; background: rgba(0,232,122,0.1); border: 0.5px solid rgba(0,232,122,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; color: var(--jade); flex-shrink: 0; }
+
+/* Tier badges */
+.tiers { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+.tier { padding: 0.3rem 0.75rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; }
+.tier.free { background: var(--rim); color: var(--txt2); }
+.tier.pro { background: rgba(0,232,122,0.15); color: var(--jade); border: 0.5px solid rgba(0,232,122,0.3); }
+.tier.studio { background: rgba(245,200,66,0.15); color: var(--gold); border: 0.5px solid rgba(245,200,66,0.3); }
+
+/* ══════════════════════════════
+   WORKFLOW STEPS
+   ══════════════════════════════ */
+.workflow { padding: 6rem 2.5rem; background: var(--surface); border-top: 0.5px solid var(--rim); border-bottom: 0.5px solid var(--rim); }
+.workflow-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-top: 4rem; position: relative; }
+.workflow-grid::before {
+  content: ''; position: absolute; top: 36px; left: calc(10% + 18px); right: calc(10% + 18px);
+  height: 1px; background: linear-gradient(90deg, var(--jade) 0%, var(--sky) 50%, var(--coral) 100%);
+  opacity: 0.25;
+}
+.wf-step { text-align: center; padding: 0 1.5rem; }
+.wf-num {
+  width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Clash Display', sans-serif; font-size: 1rem; font-weight: 700;
+  position: relative; z-index: 1;
+  border: 0.5px solid var(--rim2); background: var(--ink);
+  transition: all 0.3s;
+}
+.wf-step:nth-child(1) .wf-num { color: var(--jade); }
+.wf-step:nth-child(2) .wf-num { color: var(--sky); }
+.wf-step:nth-child(3) .wf-num { color: var(--gold); }
+.wf-step:nth-child(4) .wf-num { color: var(--coral); }
+.wf-step:nth-child(5) .wf-num { color: var(--jade); }
+.wf-step:hover .wf-num { transform: scale(1.1); box-shadow: 0 0 30px rgba(0,232,122,0.3); }
+.wf-step h4 { font-family: 'Clash Display', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+.wf-step p { font-size: 0.78rem; color: var(--txt3); line-height: 1.55; font-weight: 300; }
+.wf-emoji { font-size: 1.2rem; margin-bottom: 0.75rem; }
+
+/* ══════════════════════════════
+   INSTRUCTION DEMO (ADVANCED)
+   ══════════════════════════════ */
+.demo-section { padding: 6rem 2.5rem; }
+.demo-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+.demo-interface {
+  background: var(--surface); border: 0.5px solid var(--rim2); border-radius: var(--r-xl);
+  overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+}
+.demo-topbar { padding: 1rem 1.25rem; border-bottom: 0.5px solid var(--rim); background: var(--surface2); display: flex; align-items: center; gap: 1rem; }
+.demo-topbar-title { font-size: 0.8rem; font-weight: 500; color: var(--txt2); }
+.demo-body { padding: 1.25rem; }
+.demo-input-row {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: var(--ink); border: 0.5px solid var(--rim2); border-radius: 12px;
+  padding: 0.6rem 0.6rem 0.6rem 1rem; margin-bottom: 1rem; transition: border-color 0.2s;
+}
+.demo-input-row:focus-within { border-color: var(--jade); box-shadow: 0 0 0 3px rgba(0,232,122,0.08); }
+.demo-field { flex: 1; background: none; border: none; outline: none; font-size: 0.875rem; color: var(--txt); font-family: 'Cabinet Grotesk', sans-serif; }
+.demo-field::placeholder { color: var(--txt3); }
+.demo-send { background: var(--jade); color: var(--ink); border: none; border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: 'Cabinet Grotesk', sans-serif; white-space: nowrap; }
+.demo-send:hover { background: #00ff87; }
+
+.demo-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+.demo-chip {
+  background: var(--surface2); border: 0.5px solid var(--rim); border-radius: 100px;
+  padding: 0.3rem 0.75rem; font-size: 0.72rem; color: var(--txt2); cursor: pointer; transition: all 0.2s;
+}
+.demo-chip:hover { border-color: var(--jade); color: var(--jade); background: var(--jade-ghost); }
+
+.demo-log { min-height: 140px; }
+.log-entry { display: flex; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 0.5px solid var(--rim); font-size: 0.78rem; align-items: flex-start; }
+.log-entry:last-child { border-bottom: none; }
+.log-icon { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; margin-top: 1px; }
+.log-icon.parse { background: rgba(0,232,122,0.1); color: var(--jade); }
+.log-icon.detect { background: rgba(56,196,255,0.1); color: var(--sky); }
+.log-icon.apply { background: rgba(255,92,56,0.1); color: var(--coral); }
+.log-icon.done { background: rgba(0,232,122,0.15); color: var(--jade); }
+.log-text { color: var(--txt2); line-height: 1.4; }
+.log-text strong { color: var(--txt); font-weight: 500; }
+.log-empty { color: var(--txt3); font-size: 0.78rem; font-style: italic; padding: 1rem 0; }
+
+/* ══════════════════════════════
+   PRICING — ADVANCED CARDS
+   ══════════════════════════════ */
+.pricing-section { padding: 6rem 2.5rem; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3.5rem; }
+.pricing-card {
+  background: var(--surface); border: 0.5px solid var(--rim); border-radius: var(--r-xl);
+  padding: 2.5rem; position: relative; transition: all 0.3s; overflow: hidden;
+}
+.pricing-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--rim2), transparent); }
+.pricing-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+.pricing-card.featured { border-color: rgba(0,232,122,0.3); background: linear-gradient(145deg, var(--surface2) 0%, var(--surface) 100%); box-shadow: var(--glow-jade); }
+.pricing-card.featured::before { background: linear-gradient(90deg, transparent, var(--jade), transparent); }
+
+.pc-badge { position: absolute; top: 1.5rem; right: 1.5rem; background: var(--jade); color: var(--ink); font-size: 0.65rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 100px; letter-spacing: 0.04em; text-transform: uppercase; }
+.pc-plan { font-size: 0.75rem; color: var(--txt3); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 1rem; }
+.pc-price { font-family: 'Clash Display', sans-serif; font-size: 3rem; font-weight: 700; letter-spacing: -0.05em; margin-bottom: 0.25rem; }
+.pc-price sub { font-size: 1.2rem; color: var(--txt2); font-weight: 400; letter-spacing: 0; vertical-align: baseline; }
+.pc-period { font-size: 0.8rem; color: var(--txt3); margin-bottom: 1.75rem; }
+.pc-divider { height: 0.5px; background: var(--rim); margin-bottom: 1.75rem; }
+.pc-features { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem; }
+.pc-feature { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.83rem; color: var(--txt2); }
+.pc-feature .check { color: var(--jade); flex-shrink: 0; margin-top: 1px; font-size: 0.7rem; }
+.pc-feature .cross { color: var(--txt3); flex-shrink: 0; margin-top: 1px; font-size: 0.7rem; }
+.pc-feature.dim { opacity: 0.4; }
+.pc-btn { width: 100%; padding: 0.9rem; border-radius: 12px; font-size: 0.875rem; font-weight: 700; font-family: 'Cabinet Grotesk', sans-serif; cursor: pointer; transition: all 0.25s; border: 0.5px solid var(--rim2); background: transparent; color: var(--txt); }
+.pc-btn:hover { border-color: var(--jade); color: var(--jade); }
+.pc-btn.featured-btn { background: var(--jade); color: var(--ink); border-color: var(--jade); }
+.pc-btn.featured-btn:hover { background: #00ff87; box-shadow: 0 8px 30px rgba(0,232,122,0.4); }
+
+/* ══════════════════════════════
+   CTA FINAL
+   ══════════════════════════════ */
+.cta-final { padding: 3rem 2.5rem 6rem; }
+.cta-box {
+  max-width: 1280px; margin: 0 auto;
+  background: linear-gradient(135deg, var(--surface2) 0%, var(--ink2) 100%);
+  border: 0.5px solid var(--rim2); border-radius: var(--r-xl);
+  padding: 5rem; text-align: center; position: relative; overflow: hidden;
+}
+.cta-box::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% -20%, rgba(0,232,122,0.12) 0%, transparent 60%);
+}
+.cta-box::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--jade), transparent); }
+.cta-box h2 { font-family: 'Clash Display', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; letter-spacing: -0.04em; margin-bottom: 1rem; position: relative; }
+.cta-box p { color: var(--txt2); font-size: 1rem; margin-bottom: 2.5rem; font-weight: 300; position: relative; }
+.cta-box-actions { display: flex; gap: 1rem; justify-content: center; align-items: center; position: relative; }
+
+/* ══════════════════════════════
+   FOOTER
+   ══════════════════════════════ */
+footer {
+  padding: 3rem 2.5rem 2rem; border-top: 0.5px solid var(--rim);
+  display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; position: relative; z-index: 2;
+}
+.footer-brand p { font-size: 0.8rem; color: var(--txt3); margin-top: 0.75rem; max-width: 280px; line-height: 1.6; font-weight: 300; }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a { color: var(--txt3); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+.footer-links a:hover { color: var(--jade); }
+.footer-bottom { grid-column: 1/-1; border-top: 0.5px solid var(--rim); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.footer-copy { font-size: 0.75rem; color: var(--txt3); }
+.footer-badges { display: flex; gap: 0.5rem; }
+.f-badge { padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.65rem; border: 0.5px solid var(--rim2); color: var(--txt3); }
+
+/* ══════════════════════════════
+   SCROLL ANIMATIONS
+   ══════════════════════════════ */
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ══════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════ */
+@media (max-width: 900px) {
+  .hero-grid, .demo-inner { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .bento-grid { grid-template-columns: 1fr 1fr; }
+  .bc-1,.bc-2,.bc-3,.bc-4,.bc-5,.bc-6,.bc-7 { grid-column: span 2; grid-row: span 1; }
+  .workflow-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .workflow-grid::before { display: none; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  footer { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Grain -->
+<div class="grain"></div>
+
+<!-- Animated BG Canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ═══ NAV ═══ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">PixelMind<sup>AI</sup></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#workflow">Workflow</a></li>
+    <li><a href="#instruct">AI Editor</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#docs">Docs</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="#" class="nav-login">Sign in</a>
+    <a href="#" class="btn btn-jade">Start free →</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-grid container">
+    <!-- Left -->
+    <div>
+      <div class="hero-eyebrow">
+        <div class="eyebrow-dot"></div>
+        Now in public beta · v2.0
+      </div>
+      <h1 class="hero-title">
+        <span class="title-line"><span>Edit at the</span></span>
+        <span class="title-line"><span class="title-gradient">speed of thought</span></span>
+        <span class="title-line"><span>with AI</span></span>
+      </h1>
+      <p class="hero-sub">Professional photo, video &amp; audio editing powered by advanced AI — entirely in your browser. Type what you want. Watch it happen.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-jade">Start editing free →</a>
+        <a href="#workflow" class="btn btn-ghost-play">
+          <div class="play-icon">▶</div>
+          See how it works
+        </a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item">
+          <div class="trust-num">3<sup>-in-1</sup></div>
+          <div class="trust-label">Photo · Video · Audio</div>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <div class="trust-num">4K</div>
+          <div class="trust-label">Export quality</div>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <div class="trust-num">0</div>
+          <div class="trust-label">Software installs</div>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <div class="trust-num">GPU</div>
+          <div class="trust-label">Accelerated</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right — Studio Card -->
+    <div class="hero-visual">
+      <div class="studio-card">
+        <div class="studio-topbar">
+          <div class="studio-dots"><span></span><span></span><span></span></div>
+          <div class="studio-mode-tabs">
+            <div class="mode-tab active">Manual</div>
+            <div class="mode-tab">AI Mode</div>
+          </div>
+          <div class="ai-indicator">AI running</div>
+        </div>
+        <div class="studio-body">
+          <!-- Sidebar icons -->
+          <div class="studio-sidebar">
+            <div class="sidebar-icon active">✦</div>
+            <div class="sidebar-icon">◑</div>
+            <div class="sidebar-icon">⚙</div>
+            <div class="sidebar-sep"></div>
+            <div class="sidebar-icon">✂</div>
+            <div class="sidebar-icon">⬡</div>
+            <div class="sidebar-icon">🎨</div>
+            <div class="sidebar-sep"></div>
+            <div class="sidebar-icon">📤</div>
+          </div>
+
+          <!-- Canvas -->
+          <div class="studio-canvas">
+            <div class="canvas-subject">
+              <div class="canvas-subject-inner"></div>
+              <div class="canvas-subject-face"></div>
+              <div class="canvas-subject-body"></div>
+              <div class="canvas-selection-box"></div>
+            </div>
+            <div class="ai-chip jade pos1">✦ Face enhanced</div>
+            <div class="ai-chip coral pos2">✕ BG removed</div>
+            <div class="ai-chip sky pos3">Auto grade</div>
+            <div class="canvas-processing">
+              <div class="proc-bar"><div class="proc-fill"></div></div>
+              <div class="proc-label"><span>AI Enhancement</span><span style="color:var(--jade)">68%</span></div>
+            </div>
+          </div>
+
+          <!-- Panel -->
+          <div class="studio-panel">
+            <div class="panel-section">
+              <div class="panel-heading">Adjustments</div>
+              <div class="slider-group">
+                <div class="slider-item">
+                  <div class="slider-label"><span>Exposure</span><span class="slider-val">+0.6</span></div>
+                  <div class="slider-track"><div class="slider-fill-j" style="width:65%"></div><div class="slider-thumb" style="left:65%"></div></div>
+                </div>
+                <div class="slider-item">
+                  <div class="slider-label"><span>Contrast</span><span class="slider-val">+18</span></div>
+                  <div class="slider-track"><div class="slider-fill-j" style="width:70%"></div><div class="slider-thumb" style="left:70%"></div></div>
+                </div>
+                <div class="slider-item">
+                  <div class="slider-label"><span>Clarity</span><span class="slider-val">+32</span></div>
+                  <div class="slider-track"><div class="slider-fill-j" style="width:82%"></div><div class="slider-thumb" style="left:82%"></div></div>
+                </div>
+                <div class="slider-item">
+                  <div class="slider-label"><span>Vibrance</span><span class="slider-val">+14</span></div>
+                  <div class="slider-track"><div class="slider-fill-j" style="width:57%"></div><div class="slider-thumb" style="left:57%"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-section">
+              <button class="ai-btn">✦ AI Auto Enhance</button>
+            </div>
+            <div class="panel-section">
+              <div class="panel-heading">History</div>
+              <div class="history-items">
+                <div class="history-item"><div class="h-dot"></div>Face enhancement</div>
+                <div class="history-item"><div class="h-dot" style="background:var(--sky)"></div>BG removal</div>
+                <div class="history-item"><div class="h-dot" style="background:var(--gold)"></div>Color grade</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TICKER ═══ -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item"><em>✦</em> AI Auto Enhancement <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Face Detection & Retouching <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Background Removal <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Voice Cloning (Consent-Gated) <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Spectral Noise Reduction <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> 4K GPU Export <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Multi-track Timeline <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Instruction-Based Editing <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Sky Replacement <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> LUT Color Grading <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Batch Processing <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Celery Async Queue <span class="ticker-sep">·</span></span>
+    <!-- dupe -->
+    <span class="ticker-item"><em>✦</em> AI Auto Enhancement <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Face Detection & Retouching <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Background Removal <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Voice Cloning (Consent-Gated) <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Spectral Noise Reduction <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> 4K GPU Export <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Multi-track Timeline <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Instruction-Based Editing <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Sky Replacement <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> LUT Color Grading <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Batch Processing <span class="ticker-sep">·</span></span>
+    <span class="ticker-item"><em>✦</em> Celery Async Queue <span class="ticker-sep">·</span></span>
+  </div>
+</div>
+
+<!-- ═══ BENTO FEATURES ═══ -->
+<section class="bento" id="features">
+  <div class="container">
+    <div class="bento-header reveal">
+      <div class="section-label">Full Toolkit</div>
+      <h2 class="section-title">Every professional tool.<br>Zero compromise.</h2>
+      <p class="section-sub">From raw adjustments to AI-driven automation — the complete creative suite in your browser.</p>
+    </div>
+    <div class="bento-grid">
+
+      <!-- Image — large -->
+      <div class="bento-card bc-1 reveal">
+        <span class="bento-icon">🖼</span>
+        <h3>Advanced Image Editing</h3>
+        <p>Full HSL control, color wheels, multi-layer compositing, AI masking, sky replacement, object removal, healing brush, and LUT support. Professional Lightroom-grade tools, browser-native.</p>
+        <div class="adj-bars bento-visual">
+          <div class="adj-bar"><span class="adj-label">Exposure</span><div class="adj-track"><div class="adj-fill" style="width:65%;background:linear-gradient(90deg,var(--jade-dim),var(--jade))"></div></div><span class="adj-val" style="color:var(--jade)">+0.6</span></div>
+          <div class="adj-bar"><span class="adj-label">Highlights</span><div class="adj-track"><div class="adj-fill" style="width:30%;background:linear-gradient(90deg,var(--coral-dim),var(--coral))"></div></div><span class="adj-val" style="color:var(--coral)">-40</span></div>
+          <div class="adj-bar"><span class="adj-label">Clarity</span><div class="adj-track"><div class="adj-fill" style="width:75%;background:linear-gradient(90deg,var(--sky),#60d0ff)"></div></div><span class="adj-val" style="color:var(--sky)">+30</span></div>
+          <div class="adj-bar"><span class="adj-label">Vibrance</span><div class="adj-track"><div class="adj-fill" style="width:80%;background:linear-gradient(90deg,var(--gold),#ffe080)"></div></div><span class="adj-val" style="color:var(--gold)">+45</span></div>
+          <div class="adj-bar"><span class="adj-label">Noise NR</span><div class="adj-track"><div class="adj-fill" style="width:60%;background:linear-gradient(90deg,var(--jade-dim),var(--jade))"></div></div><span class="adj-val" style="color:var(--jade)">+20</span></div>
+        </div>
+      </div>
+
+      <!-- Video -->
+      <div class="bento-card bc-2 reveal reveal-delay-1">
+        <span class="bento-icon">🎥</span>
+        <h3>Video Timeline</h3>
+        <p>Multi-track drag-and-drop editor with cut, trim, split, merge. Transitions, LUTs, stabilization, speed control, animated text.</p>
+        <div class="tiers bento-visual">
+          <span class="tier free">Starter</span>
+          <span class="tier pro">Pro</span>
+          <span class="tier studio">Studio</span>
+        </div>
+      </div>
+
+      <!-- Audio -->
+      <div class="bento-card bc-3 reveal reveal-delay-2">
+        <span class="bento-icon">🎵</span>
+        <h3>Audio Studio</h3>
+        <p>Spectral noise reduction, EQ, reverb, echo, compression, voice enhancement, trim &amp; merge.</p>
+        <div class="waveform bento-visual" id="waveform"></div>
+      </div>
+
+      <!-- Instruction — wide -->
+      <div class="bento-card bc-4 reveal reveal-delay-1">
+        <span class="bento-icon">✦</span>
+        <h3>Instruction-Based Editing</h3>
+        <p>Type natural language commands. The AI NLP engine parses your intent into precise edit operations — no tool knowledge required.</p>
+        <div class="instr-flow bento-visual">
+          <div class="instr-step"><div class="instr-step-num">1</div><div class="instr-step-txt"><strong>"Enhance face brightness"</strong></div></div>
+          <div class="instr-step"><div class="instr-step-num">2</div><div class="instr-step-txt">NLP parses → <strong>action: face_enhance, param: brightness</strong></div></div>
+          <div class="instr-step"><div class="instr-step-num">3</div><div class="instr-step-txt">Face detected at 97% confidence, CLAHE applied</div></div>
+          <div class="instr-step"><div class="instr-step-num">✓</div><div class="instr-step-txt" style="color:var(--jade)">Edit applied in 0.4s</div></div>
+        </div>
+      </div>
+
+      <!-- Security — tall -->
+      <div class="bento-card bc-5 reveal reveal-delay-3">
+        <span class="bento-icon">🔐</span>
+        <h3>Enterprise Security</h3>
+        <p>Every file is user-isolated, encrypted in transit, and auto-deleted post-export. Voice cloning is consent-gated with full audit logging.</p>
+        <div class="sec-list bento-visual">
+          <div class="sec-list-item"><div class="sec-check">✓</div>HTTPS E2E encryption</div>
+          <div class="sec-list-item"><div class="sec-check">✓</div>JWT + bcrypt auth</div>
+          <div class="sec-list-item"><div class="sec-check">✓</div>File isolation per user</div>
+          <div class="sec-list-item"><div class="sec-check">✓</div>Auto-delete after export</div>
+          <div class="sec-list-item"><div class="sec-check">✓</div>Voice consent + watermark</div>
+          <div class="sec-list-item"><div class="sec-check">✓</div>AI misuse detection</div>
+          <div class="sec-list-item"><div class="sec-check">✓</div>Rate limiting (60 req/min)</div>
+        </div>
+      </div>
+
+      <!-- Voice -->
+      <div class="bento-card bc-6 reveal reveal-delay-2">
+        <span class="bento-icon">🎤</span>
+        <h3>Voice Cloning</h3>
+        <p>Upload source audio → extract pitch, tone, timbre → apply to target. Consent-gated. Watermarked. Activity-logged.</p>
+        <div class="tiers bento-visual"><span class="tier pro">Pro</span><span class="tier studio">Studio</span></div>
+      </div>
+
+      <!-- Export -->
+      <div class="bento-card bc-7 reveal reveal-delay-3">
+        <span class="bento-icon">📦</span>
+        <h3>Smart Export System</h3>
+        <p>JPEG, PNG, MP4, WAV — HD, Full HD, 4K. Compression presets, custom bitrate control, GPU-accelerated rendering, batch queue.</p>
+        <div class="tiers bento-visual">
+          <span class="tier free">HD</span>
+          <span class="tier pro">4K</span>
+          <span class="tier studio">Batch 4K</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WORKFLOW ═══ -->
+<section class="workflow" id="workflow">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label" style="justify-content:center">How It Works</div>
+      <h2 class="section-title">From raw file to masterpiece</h2>
+    </div>
+    <div class="workflow-grid">
+      <div class="wf-step reveal">
+        <div class="wf-num">01</div>
+        <div class="wf-emoji">📂</div>
+        <h4>Upload</h4>
+        <p>Drop photo, video, or audio. Up to 500MB. Isolated storage, encrypted transit.</p>
+      </div>
+      <div class="wf-step reveal reveal-delay-1">
+        <div class="wf-num">02</div>
+        <div class="wf-emoji">⚙</div>
+        <h4>Choose Mode</h4>
+        <p>Manual workspace with full controls, or AI auto-mode for one-click results.</p>
+      </div>
+      <div class="wf-step reveal reveal-delay-2">
+        <div class="wf-num">03</div>
+        <div class="wf-emoji">✦</div>
+        <h4>Edit</h4>
+        <p>Use sliders, AI tools, or type instructions. Real-time preview at every step.</p>
+      </div>
+      <div class="wf-step reveal reveal-delay-3">
+        <div class="wf-num">04</div>
+        <div class="wf-emoji">⚡</div>
+        <h4>Process</h4>
+        <p>Celery async queue + GPU acceleration. Background rendering — no waiting.</p>
+      </div>
+      <div class="wf-step reveal reveal-delay-4">
+        <div class="wf-num">05</div>
+        <div class="wf-emoji">🚀</div>
+        <h4>Export</h4>
+        <p>Download in any format, any quality. Files auto-deleted from servers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ INSTRUCTION DEMO ═══ -->
+<section class="demo-section" id="instruct">
+  <div class="container">
+    <div class="demo-inner">
+      <div class="reveal">
+        <div class="section-label">Instruction Engine</div>
+        <h2 class="section-title">Just type what you want.</h2>
+        <p class="section-sub">Our NLP engine maps natural language to 20+ edit operations. No tutorials. No tool menus. Just describe your vision.</p>
+        <div style="margin-top:2rem;display:flex;flex-direction:column;gap:0.75rem;">
+          <div style="font-size:0.8rem;color:var(--txt3);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Example commands</div>
+          <div style="font-size:0.875rem;color:var(--txt2);display:flex;flex-direction:column;gap:0.5rem;">
+            <div>→ "Remove background noise from my podcast"</div>
+            <div>→ "Add blur at 0:15 for 3 seconds"</div>
+            <div>→ "Enhance face brightness and smooth skin"</div>
+            <div>→ "Apply cinematic LUT, crop to 16:9"</div>
+            <div>→ "Export as MP4 in 4K quality"</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="demo-interface">
+          <div class="demo-topbar">
+            <div class="studio-dots"><span></span><span></span><span></span></div>
+            <span class="demo-topbar-title">✦ PixelMind Instruction Engine</span>
+            <div class="ai-indicator" style="margin-left:auto">Ready</div>
+          </div>
+          <div class="demo-body">
+            <div class="demo-chips" id="demo-chips">
+              <div class="demo-chip" onclick="runInstruction('Remove background noise')">Remove background noise</div>
+              <div class="demo-chip" onclick="runInstruction('Enhance face brightness')">Enhance face brightness</div>
+              <div class="demo-chip" onclick="runInstruction('Add blur at 0:10')">Add blur at 0:10</div>
+              <div class="demo-chip" onclick="runInstruction('Apply cinematic LUT')">Apply cinematic LUT</div>
+              <div class="demo-chip" onclick="runInstruction('Stabilize shaky footage')">Stabilize footage</div>
+              <div class="demo-chip" onclick="runInstruction('Export as MP4 4K')">Export 4K MP4</div>
+            </div>
+            <div class="demo-input-row">
+              <input class="demo-field" id="demo-input" type="text" placeholder='e.g. "Add subtle vignette and warm the shadows"'>
+              <button class="demo-send" onclick="runInstruction()">Run ✦</button>
+            </div>
+            <div class="demo-log" id="demo-log">
+              <div class="log-empty">← Click a chip or type your own instruction above</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label" style="justify-content:center">Pricing</div>
+      <h2 class="section-title">Simple. Transparent. Fair.</h2>
+      <p class="section-sub" style="margin:0 auto">Start free. Upgrade when you need more power.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <div class="pricing-card reveal">
+        <div class="pc-plan">Starter</div>
+        <div class="pc-price">Free</div>
+        <div class="pc-period">Forever — no credit card</div>
+        <div class="pc-divider"></div>
+        <div class="pc-features">
+          <div class="pc-feature"><span class="check">✓</span>5 exports / month</div>
+          <div class="pc-feature"><span class="check">✓</span>HD quality (1080p)</div>
+          <div class="pc-feature"><span class="check">✓</span>AI auto mode</div>
+          <div class="pc-feature"><span class="check">✓</span>Basic image tools</div>
+          <div class="pc-feature dim"><span class="cross">✕</span>Voice cloning</div>
+          <div class="pc-feature dim"><span class="cross">✕</span>Instruction editing</div>
+          <div class="pc-feature dim"><span class="cross">✕</span>4K export</div>
+        </div>
+        <button class="pc-btn">Get started free</button>
+      </div>
+
+      <div class="pricing-card featured reveal reveal-delay-1">
+        <div class="pc-badge">Most popular</div>
+        <div class="pc-plan">Pro</div>
+        <div class="pc-price">$19<sub>/mo</sub></div>
+        <div class="pc-period">Billed monthly or $15/mo annually</div>
+        <div class="pc-divider"></div>
+        <div class="pc-features">
+          <div class="pc-feature"><span class="check">✓</span>Unlimited exports</div>
+          <div class="pc-feature"><span class="check">✓</span>4K quality export</div>
+          <div class="pc-feature"><span class="check">✓</span>All AI tools</div>
+          <div class="pc-feature"><span class="check">✓</span>Voice cloning (consent-gated)</div>
+          <div class="pc-feature"><span class="check">✓</span>Instruction editing engine</div>
+          <div class="pc-feature"><span class="check">✓</span>Batch processing</div>
+          <div class="pc-feature"><span class="check">✓</span>Priority GPU queue</div>
+        </div>
+        <button class="pc-btn featured-btn">Start 7-day free trial →</button>
+      </div>
+
+      <div class="pricing-card reveal reveal-delay-2">
+        <div class="pc-plan">Studio</div>
+        <div class="pc-price">$49<sub>/mo</sub></div>
+        <div class="pc-period">For teams, agencies &amp; enterprises</div>
+        <div class="pc-divider"></div>
+        <div class="pc-features">
+          <div class="pc-feature"><span class="check">✓</span>Everything in Pro</div>
+          <div class="pc-feature"><span class="check">✓</span>Team workspace (up to 20)</div>
+          <div class="pc-feature"><span class="check">✓</span>API access + webhooks</div>
+          <div class="pc-feature"><span class="check">✓</span>SLA 99.9% uptime</div>
+          <div class="pc-feature"><span class="check">✓</span>Dedicated GPU node</div>
+          <div class="pc-feature"><span class="check">✓</span>Custom S3 storage</div>
+          <div class="pc-feature"><span class="check">✓</span>Priority support</div>
+        </div>
+        <button class="pc-btn">Contact sales →</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA FINAL ═══ -->
+<div class="cta-final">
+  <div class="cta-box reveal">
+    <h2>Create something<br><span class="title-gradient">extraordinary today</span></h2>
+    <p>Join creators using PixelMind to edit smarter, faster, and better than ever before.</p>
+    <div class="cta-box-actions">
+      <a href="#" class="btn btn-jade">Start free — no card needed →</a>
+      <a href="#" class="btn btn-outline">View API docs</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="nav-logo" style="font-size:1.3rem">PixelMind<sup style="font-size:0.45rem;-webkit-text-fill-color:var(--jade)">AI</sup></a>
+    <p>Professional AI-powered photo, video &amp; audio editing — right in your browser. No installs. No compromises.</p>
+  </div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Security</a>
+    <a href="#">API Docs</a>
+    <a href="#">GitHub</a>
+    <a href="#">Contact</a>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 PixelMind Technologies. All rights reserved.</div>
+    <div class="footer-badges">
+      <span class="f-badge">SOC 2</span>
+      <span class="f-badge">GDPR</span>
+      <span class="f-badge">99.9% SLA</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════
+   CURSOR
+   ══════════════════════════════ */
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+(function animRing(){ rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+
+/* ══════════════════════════════
+   CANVAS PARTICLE BACKGROUND
+   ══════════════════════════════ */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W,H, particles=[];
+
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor(){
+    this.x = Math.random()*W; this.y = Math.random()*H;
+    this.vx = (Math.random()-0.5)*0.4; this.vy = (Math.random()-0.5)*0.4;
+    this.r = Math.random()*1.5+0.3;
+    this.color = Math.random()>0.7 ? '0,232,122' : Math.random()>0.5 ? '56,196,255' : '255,92,56';
+    this.alpha = Math.random()*0.4+0.1;
+  }
+  update(){ this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>W)this.vx*=-1; if(this.y<0||this.y>H)this.vy*=-1; }
+  draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(${this.color},${this.alpha})`; ctx.fill(); }
+}
+
+for(let i=0;i<120;i++) particles.push(new Particle());
+
+function drawParticles(){
+  ctx.clearRect(0,0,W,H);
+  // Draw connection lines
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){ ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y); ctx.strokeStyle=`rgba(0,232,122,${0.05*(1-dist/120)})`; ctx.lineWidth=0.5; ctx.stroke(); }
+    }
+    particles[i].update(); particles[i].draw();
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+/* ══════════════════════════════
+   NAVBAR SCROLL
+   ══════════════════════════════ */
+window.addEventListener('scroll', ()=> { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY>50); });
+
+/* ══════════════════════════════
+   SCROLL REVEAL
+   ══════════════════════════════ */
+const revealObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+/* ══════════════════════════════
+   WAVEFORM ANIMATION
+   ══════════════════════════════ */
+const wf = document.getElementById('waveform');
+if(wf){ const heights=[10,28,42,56,48,36,60,44,32,50,38,22,44,60,36,50,28,40,52,24,46,58,34,48,20,44,36]; heights.forEach((h,i)=>{ const b=document.createElement('div'); b.className='wave-bar'; b.style.height=h+'px'; b.style.setProperty('--d',(0.6+i*0.05)+'s'); b.style.animationDelay=(i*0.05)+'s'; wf.appendChild(b); }); }
+
+/* ══════════════════════════════
+   INSTRUCTION DEMO ENGINE
+   ══════════════════════════════ */
+const LOGS = {
+  'Remove background noise': [
+    {type:'parse',icon:'⚙',msg:'<strong>Parsing:</strong> "Remove background noise"'},
+    {type:'detect',icon:'🎵',msg:'<strong>Detected:</strong> action=audio_noise_reduction'},
+    {type:'apply',icon:'📊',msg:'<strong>Analyzing</strong> audio spectrum — noise floor at -42dB'},
+    {type:'apply',icon:'🔇',msg:'<strong>Applying</strong> spectral subtraction (strength: 0.75)'},
+    {type:'done',icon:'✓',msg:'<strong>Done</strong> — SNR improved by 18dB · output: clean_audio.wav'},
+  ],
+  'Enhance face brightness': [
+    {type:'parse',icon:'⚙',msg:'<strong>Parsing:</strong> "Enhance face brightness"'},
+    {type:'detect',icon:'👤',msg:'<strong>Face detection</strong> running — Haar cascade v4'},
+    {type:'detect',icon:'📦',msg:'<strong>Found</strong> 1 face region (x:240,y:180,w:120,h:140) — confidence 97%'},
+    {type:'apply',icon:'☀',msg:'<strong>Applying</strong> CLAHE on L-channel, adaptive brightness +22'},
+    {type:'done',icon:'✓',msg:'<strong>Done</strong> — preview updated · 0.38s'},
+  ],
+  'Add blur at 0:10': [
+    {type:'parse',icon:'⚙',msg:'<strong>Parsing:</strong> "Add blur at 0:10"'},
+    {type:'detect',icon:'📍',msg:'<strong>Detected:</strong> effect=blur, timestamp=0:10'},
+    {type:'apply',icon:'🎥',msg:'<strong>Seeking</strong> frame at 0:10 in timeline (frame #300)'},
+    {type:'apply',icon:'⬡',msg:'<strong>Applying</strong> Gaussian blur σ=8px to frame range ±15f'},
+    {type:'done',icon:'✓',msg:'<strong>Done</strong> — blur keyframe added at 0:10'},
+  ],
+  'Apply cinematic LUT': [
+    {type:'parse',icon:'⚙',msg:'<strong>Parsing:</strong> "Apply cinematic LUT"'},
+    {type:'detect',icon:'🎨',msg:'<strong>Loading</strong> LUT library — 48 profiles found'},
+    {type:'apply',icon:'🎬',msg:'<strong>Applying</strong> "Teal & Orange" grade (strength: 85%)'},
+    {type:'apply',icon:'⚡',msg:'<strong>GPU rendering</strong> — 1,847 frames accelerated'},
+    {type:'done',icon:'✓',msg:'<strong>Done</strong> — cinematic look applied · 2.1s'},
+  ],
+  'Stabilize shaky footage': [
+    {type:'parse',icon:'⚙',msg:'<strong>Parsing:</strong> "Stabilize shaky footage"'},
+    {type:'detect',icon:'📹',msg:'<strong>Analyzing</strong> motion vectors (optical flow)'},
+    {type:'detect',icon:'📐',msg:'<strong>Detected</strong> shake: ±4.2px H, ±2.8px V — 847 frames'},
+    {type:'apply',icon:'🔧',msg:'<strong>Applying</strong> Warp Stabilizer (smooth: 50%, no crop)'},
+    {type:'done',icon:'✓',msg:'<strong>Done</strong> — 0 black borders · stabilized.mp4 ready'},
+  ],
+  'Export as MP4 4K': [
+    {type:'parse',icon:'⚙',msg:'<strong>Parsing:</strong> "Export as MP4 4K"'},
+    {type:'detect',icon:'📤',msg:'<strong>Detected:</strong> format=mp4, resolution=4K (3840×2160)'},
+    {type:'apply',icon:'⚡',msg:'<strong>GPU encoding</strong> H.264 — target bitrate 40Mbps'},
+    {type:'apply',icon:'⏳',msg:'<strong>Queued</strong> in Celery task queue — estimated 45s'},
+    {type:'done',icon:'✓',msg:'<strong>Export ready</strong> — download link generated'},
+  ],
+};
+
+function runInstruction(preset){
+  const field = document.getElementById('demo-input');
+  const log = document.getElementById('demo-log');
+  const text = preset || field.value.trim();
+  if(!text) return;
+  field.value = text;
+  log.innerHTML = '';
+  const steps = LOGS[text] || [
+    {type:'parse',icon:'⚙',msg:`<strong>Parsing:</strong> "${text}"`},
+    {type:'detect',icon:'🤖',msg:'<strong>Intent classified</strong> — mapping to edit operations'},
+    {type:'apply',icon:'⚡',msg:'<strong>Executing</strong> AI pipeline'},
+    {type:'done',icon:'✓',msg:'<strong>Edit applied</strong> successfully'},
+  ];
+  steps.forEach((step,i)=>{
+    setTimeout(()=>{
+      const el = document.createElement('div');
+      el.className='log-entry';
+      el.style.opacity='0'; el.style.transition='opacity 0.3s, transform 0.3s'; el.style.transform='translateX(-8px)';
+      el.innerHTML=`<div class="log-icon ${step.type}">${step.icon}</div><div class="log-text">${step.msg}</div>`;
+      log.appendChild(el);
+      setTimeout(()=>{ el.style.opacity='1'; el.style.transform='translateX(0)'; },30);
+    },i*500);
+  });
+}
+
+/* ══════════════════════════════
+   SLIDER INTERACTION (hero panel)
+   ══════════════════════════════ */
+document.querySelectorAll('.slider-track').forEach(track=>{
+  track.addEventListener('click', e=>{
+    const rect = track.getBoundingClientRect();
+    const pct = Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+    const fill = track.querySelector('.slider-fill-j');
+    const thumb = track.querySelector('.slider-thumb');
+    if(fill) fill.style.width=(pct*100)+'%';
+    if(thumb) thumb.style.left=(pct*100)+'%';
+  });
+});
+</script>
+</body>
+</html>
