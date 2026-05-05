@@ -7,6 +7,7 @@ from slowapi.errors import RateLimitExceeded
 from config.settings import get_settings
 from models.database import create_tables
 from routes import auth, projects, editor, users
+import os
 
 settings = get_settings()
 
@@ -23,10 +24,23 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# ── CORS ──
+# ── CORS Configuration ──
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+    "https://app.pixelmind.app",
+]
+
+# Add frontend deployment URL if specified
+frontend_url = os.getenv("FRONTEND_DEPLOY_URL") or os.getenv("FRONTEND_URL")
+if frontend_url and frontend_url not in allowed_origins:
+    allowed_origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://app.pixelmind.app"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,6 +60,10 @@ async def startup():
 @app.get("/api/health")
 def health():
     return {"status": "ok", "version": settings.APP_VERSION}
+
+@app.get("/")
+def root():
+    return {"message": "PixelMind API is running!", "docs": "/api/docs"}
 
 if __name__ == "__main__":
     import uvicorn

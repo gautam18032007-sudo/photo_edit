@@ -1,0 +1,93 @@
+# ═════════════════════════════════════════════
+# PIXELMIND PROJECT - GITIGNORE
+# ═════════════════════════════════════════════
+
+# ─ Environment Variables ─
+.env
+.env.local
+.env.*.local
+
+# ─ Python ─
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+ENV/
+env/
+.venv
+
+# ─ Storage & Uploads ─
+/storage/
+/uploads/
+/outputs/
+/temp/
+*.sqlite
+*.db
+
+# ─ IDE & Editor ─
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.env
+Thumbs.db
+*.sublime-*
+
+# ─ Node / Frontend ─
+node_modules/
+npm-debug.log
+yarn-error.log
+.next/
+dist/
+build/
+
+# ─ Testing ─
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ─ Logs ─
+*.log
+logs/
+
+# ─ OS ─
+.DS_Store
+*.pem
+*.key
+
+# ─ System ─
+.AppleDouble
+.LSOverride
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# ─ Celery ─
+celerybeat-schedule
+dump.rdb
+
+# ─ Redis ─
+dump.rdb
+appendonly.aof

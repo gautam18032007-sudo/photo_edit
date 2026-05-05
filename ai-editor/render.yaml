@@ -1,0 +1,67 @@
+services:
+  - type: web
+    name: pixelmind-api
+    runtime: python
+    runtimeVersion: "3.11"
+    buildCommand: |
+      cd backend
+      pip install -r requirements.txt
+    startCommand: |
+      cd backend
+      uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        scope: run
+        value: postgresql://${db.user}:${db.password}@${db.host}:${db.port}/${db.name}
+      - key: REDIS_URL
+        scope: run
+        value: redis://${redis.host}:${redis.port}/0
+      - key: CELERY_BROKER_URL
+        scope: run
+        value: redis://${redis.host}:${redis.port}/0
+      - key: CELERY_RESULT_BACKEND
+        scope: run
+        value: redis://${redis.host}:${redis.port}/1
+      - key: DEBUG
+        scope: run
+        value: "False"
+      - key: STORAGE_BACKEND
+        scope: run
+        value: s3
+
+  - type: worker
+    name: pixelmind-worker
+    runtime: python
+    runtimeVersion: "3.11"
+    buildCommand: |
+      cd backend
+      pip install -r requirements.txt
+    startCommand: |
+      cd backend
+      celery -A services.celery_app worker --loglevel=info
+    envVars:
+      - key: DATABASE_URL
+        scope: run
+        value: postgresql://${db.user}:${db.password}@${db.host}:${db.port}/${db.name}
+      - key: REDIS_URL
+        scope: run
+        value: redis://${redis.host}:${redis.port}/0
+      - key: CELERY_BROKER_URL
+        scope: run
+        value: redis://${redis.host}:${redis.port}/0
+      - key: CELERY_RESULT_BACKEND
+        scope: run
+        value: redis://${redis.host}:${redis.port}/1
+
+databases:
+  - name: pixelmind-db
+    engine: postgresql
+    version: "15"
+    plan: free
+    databaseName: pixelmind
+    user: pixelmind_user
+
+redis:
+  - name: pixelmind-redis
+    plan: free
+    version: "7"

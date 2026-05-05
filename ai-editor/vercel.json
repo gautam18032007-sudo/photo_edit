@@ -1,0 +1,44 @@
+{
+  "buildCommand": "echo 'Building static site...'",
+  "outputDirectory": "frontend",
+  "framework": "static",
+  "env": {
+    "REACT_APP_API_URL": "@api_url"
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://your-backend.onrender.com/api/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=3600"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "src": "^/(?!api/)(.*)$",
+      "dest": "/frontend/index.html",
+      "status": 200
+    }
+  ]
+}
